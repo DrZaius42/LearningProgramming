@@ -53,12 +53,3 @@ spam = '    Hello, world   '
 print(spam.strip())
 print(spam.rstrip())
 print(spam.lstrip())
-
-test = 'spamspamtestspamspam'
-print(test.strip('spam'))#for the string arguments doesn't matter the order of the characters
-
-
-#using ord() and chr() to deal with unicode values
-print(ord('A'))
-print(chr(65))
-print(chr(42))
