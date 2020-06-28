@@ -1,5 +1,5 @@
 #this a basic webscrapper to download pdf files from a webpage
-import re, os
+import re, os, webbrowser, sys
 from pathlib import Path
 from urllib.request import urlopen as uReq
 from bs4 import  BeautifulSoup as soup
@@ -37,6 +37,17 @@ for header in page_soup('h2'):
     categoryName = idRegex.findall(str(header))[0]
     categories[categoryName] = links
 
+#remove categories
+for i in categories.keys():
+    print(i + '\n')
+print('Do you want to remove a category?')
+option = input()
+print('Which category?')
+while option  != 'n':
+        categories.remove(option)
+for i in categories.keys():
+    print(i + '\n')
+
 #creates a folder for each category and downloads the pdf's to it
 mainFolder = Path.home() / 'Documents/BooksWebScrapper'
 while True:
@@ -59,18 +70,20 @@ for entry, listLinks in categories.items():
         download_html = uClient.read()
         uClient.close()
         download_soup = soup(download_html, "html.parser")
+        bookTitle = download_soup.h1.string.replace(" ", "")
+        if '/' in bookTitle:
+            bookTitle = bookTitle.replace('/', '-')
         for i in download_soup.find_all('a'):
             pdfLink = i.get('href')
             if pdfLink.endswith('.pdf'):
-                namePdf = i.attrs['href']
-                uClient = uReq('https://link.springer.com' + pdfLink)
+                webbrowser.get('firefox').open_new_tab('https://link.springer.com' + pdfLink) 
+                '''uClient = uReq('https://link.springer.com' + pdfLink)
                 pdf = open(Path.cwd() / namePdf, 'wb')
                 pdf.write(uClient.read())
                 pdf.close()
-                uClient.close()
+                uClient.close()'''
                 break
     os.chdir(mainFolder)
 
     
-
 
